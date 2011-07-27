@@ -1,6 +1,4 @@
 require 'rubygems'
-require 'bundler'
-Bundler.setup(:default, :ci)
 require 'thor'
 require 'highline/import'
 require 'mechanize'
