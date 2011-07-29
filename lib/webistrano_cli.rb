@@ -27,5 +27,3 @@ module WebistranoCli
     end
   end
 end
-
-# WebistranoCli.deploy 'mm4-hoovers'

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'webistrano_cli'
+WebistranoCli.deploy 'mm4-hoovers'
