@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require 'active_resource'
 module WebistranoCli
   class WebistranoResource < ActiveResource::Base

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require "webistrano_cli/webistrano_resource"
 require "webistrano_cli/project"
 require "webistrano_cli/stage"

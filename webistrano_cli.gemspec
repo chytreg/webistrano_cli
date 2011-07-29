@@ -22,6 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'thor'
   s.add_dependency 'highline'
   s.add_dependency 'mechanize'
-  s.add_dependency 'activeresource'
+  s.add_dependency 'activeresource', '< 3.1.0'
 
 end

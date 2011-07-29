@@ -1,4 +1,4 @@
-$:.unshift(File.dirname(File.expand_path(__FILE__)))
+# -*- encoding: utf-8 -*-
 require 'highline/import'
 require 'webistrano_cli/task'
 require 'webistrano_cli/version'

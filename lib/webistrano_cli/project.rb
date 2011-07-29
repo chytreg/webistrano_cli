@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 module WebistranoCli
   class Project < WebistranoResource
     def self.find_by_name(name)

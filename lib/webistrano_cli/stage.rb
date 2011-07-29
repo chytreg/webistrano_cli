@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 module WebistranoCli
   class Stage < WebistranoResource
     self.site = superclass.site + "/projects/:project_id"
