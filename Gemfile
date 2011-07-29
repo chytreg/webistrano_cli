@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-gem 'thor'
-gem 'highline'
-gem 'mechanize'
-gem 'awesome_print'
+
+# Specify your gem's dependencies in webistrano_cli.gemspec
+gemspec
+
