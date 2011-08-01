@@ -1,0 +1,26 @@
+== WebistranoCli
+
+webistrano_cli - bash command allow to deploy projects from webistrano
+
+=== Instalation
+install gem:
+
+  gem install webistrano_cli
+
+setup your bash file:
+
+  $ export WCLI_SITE=your_webistrano_site
+  $ export WCLI_USER=user
+  $ export WCLI_PASSWORD=pass
+
+tip: when you don't provide settings above webistrano_cli will ask for it
+
+=== Usage
+
+deploy example
+  
+  $ webistrano_cli -p project_name -s stage_name -t task_name
+
+defaults: stage_name = staging, task_name  = deploy:migrations
+
+tip: webistrano_cli will ask for any prompt value :)
