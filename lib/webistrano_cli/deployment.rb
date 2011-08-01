@@ -1,21 +1,26 @@
 # -*- encoding: utf-8 -*-
 require 'mechanize'
 module WebistranoCli
-  class Deployment < WebistranoResource
-    self.site = superclass.site + "/projects/:project_id/stages/:stage_id"
+  class Deployment < ActiveResource::Base
+
+    def self.configure(config)
+      self.site     = config[:site] + "/projects/:project_id/stages/:stage_id"
+      self.user     = config[:user]
+      self.password = config[:password]
+    end
 
     def self.get_prompt_config(project_id, stage_id, task)
       prompt_config = {}
       agent = Mechanize.new
       agent.user_agent_alias = 'Mac Safari'
 
-      login_page = agent.get("#{WebistranoResource.site}/sessions/new")
+      login_page = agent.get("#{Project.site}/sessions/new")
       login_page.form_with(:action => '/sessions') { |f|
-        f.login = WebistranoResource.user
-        f.password = WebistranoResource.password
+        f.login = self.user
+        f.password = self.password
       }.submit
 
-      task_page = agent.get("#{WebistranoResource.site}/projects/#{project_id}/stages/#{stage_id}/deployments/new?task=#{task}")
+      task_page = agent.get("#{Project.site}/projects/#{project_id}/stages/#{stage_id}/deployments/new?task=#{task}")
 
       deploy_form = task_page.form_with(:action => /deployments/, :method => /post/i)
 

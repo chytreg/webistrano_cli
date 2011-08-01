@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
-require "webistrano_cli/webistrano_resource"
-require "webistrano_cli/project"
-require "webistrano_cli/stage"
-require "webistrano_cli/deployment"
+require 'active_resource'
+require 'webistrano_cli/project'
+require 'webistrano_cli/stage'
+require 'webistrano_cli/deployment'
 
 module WebistranoCli
   class Task

@@ -1,5 +1,21 @@
 #!/usr/bin/env ruby
-
 require 'rubygems'
+
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+require 'bundler'
+Bundler.setup
+require 'slop'
 require 'webistrano_cli'
-WebistranoCli.deploy 'mm4-hoovers'
+
+# parse assumes ARGV, otherwise you can pass it your own Array
+opts = Slop.parse :help => true do
+  on :p, :project, 'Project name', true
+  on :s, :stage, 'Stage', true
+  on :t, :task, 'Task', true
+  on :v, :version, 'Print the version' do
+    puts 'Version 0.0.1'
+  end
+end
+
+opts.p? ? WebistranoCli.deploy(opts.to_hash) : puts(opts.help)
