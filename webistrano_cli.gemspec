@@ -13,9 +13,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "webistrano_cli"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `if [ -d .git ]; then git ls-files; fi`.split("\n")
+  s.test_files    = `if [ -d .git ]; then git ls-files -- {test,spec,features}/*; fi `.split("\n")
+  s.executables   = `if [ -d .git ]; then git ls-files -- bin/*; fi`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
   s.add_development_dependency 'rake'
