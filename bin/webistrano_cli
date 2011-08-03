@@ -9,7 +9,9 @@ require 'slop'
 require 'webistrano_cli'
 
 # parse assumes ARGV, otherwise you can pass it your own Array
-opts = Slop.parse :help => true do
+opts = Slop.new :help => true do
+  banner 'Usage: webistrano_cli -p project_name'
+  description 'command allow to deploy projects from webistrano'
   on :p, :project, 'Project name', true
   on :s, :stage, 'Stage', true
   on :t, :task, 'Task', true
@@ -17,5 +19,10 @@ opts = Slop.parse :help => true do
     puts 'Version 0.0.1'
   end
 end
-
-opts.p? ? WebistranoCli.deploy(opts.to_hash) : puts(opts.help)
+begin
+  opts.parse
+  WebistranoCli.deploy(opts.to_hash) and return if opts.p?
+  puts(opts.help) unless opts.v?
+rescue Slop::Error => ex
+  puts ex.message
+end
