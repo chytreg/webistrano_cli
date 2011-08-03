@@ -13,7 +13,7 @@ module WebistranoCli
       Task.new(
         opts[:project],
         config.stage(opts[:stage]),
-        config.stage(opts[:task])
+        config.task(opts[:task])
       ).run
     end
   end

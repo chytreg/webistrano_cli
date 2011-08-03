@@ -21,8 +21,7 @@ opts = Slop.new :help => true do
 end
 begin
   opts.parse
-  WebistranoCli.deploy(opts.to_hash) and return if opts.p?
-  puts(opts.help) unless opts.v?
+  opts.p? ? WebistranoCli.deploy(opts.to_hash) : (puts(opts.help) unless opts.v?)
 rescue Slop::Error => ex
   puts ex.message
 end
