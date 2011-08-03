@@ -13,7 +13,7 @@ module WebistranoCli
       config = {}
 
       [:site, :user,:password].each do |field|
-        config[field] = ENV["WCLI_#{field.upcase}"]
+        config[field] = ENV["WCLI_#{field.to_s.upcase}"]
         next if config[field]
         config[field] = ask("webistrano #{field}: ") do |q|
           q.whitespace = :strip_and_collapse
