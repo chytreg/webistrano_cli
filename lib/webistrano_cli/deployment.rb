@@ -32,7 +32,7 @@ module WebistranoCli
           q.responses[:not_valid] = "#{field.name} => can't be blank!"
         end
       end
-      prompt_config
+      prompt_config.presence
     end
   end
 end

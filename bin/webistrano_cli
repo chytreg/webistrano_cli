@@ -16,7 +16,7 @@ opts = Slop.new :help => true do
   on :s, :stage, 'Stage', true
   on :t, :task, 'Task', true
   on :v, :version, 'Print the version' do
-    puts 'Version 0.0.1'
+    puts "Version #{WebistranoCli::VERSION}"
   end
 end
 begin
