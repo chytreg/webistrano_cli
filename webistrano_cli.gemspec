@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
   s.executables   = `if [ -d .git ]; then git ls-files -- bin/*; fi`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_development_dependency 'rake'
-  s.add_dependency 'slop'
-  s.add_dependency 'highline'
-  s.add_dependency 'mechanize'
-  s.add_dependency 'activeresource', '< 3.1.0'
+  s.add_development_dependency 'rake',  '~> 0.9.2'
+  s.add_dependency 'slop',              '2.4.3'
+  s.add_dependency 'highline',          '1.6.11'
+  s.add_dependency 'mechanize',         '2.1'
+  s.add_dependency 'activeresource',    '< 3.1.0'
 
 end
