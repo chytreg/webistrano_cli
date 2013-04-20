@@ -1,16 +1,39 @@
 # -*- encoding: utf-8 -*-
 module WebistranoCli
-  class Stage < ActiveResource::Base
+  class Stage
+    include Her::Model
+    belongs_to :project
 
-    def self.configure(config)
-      self.site     = config[:site] + "/projects/:project_id"
-      self.user     = config[:user]
-      self.password = config[:password]
+    def tasks
+      Task.all(:_project_id => self.project_id, :_stage_id => self.id)
     end
 
-    def find_task(name)
-      Task.find(:all, :params => @prefix_options.merge({:stage_id => id}) ).find {|task| task.name == name}
+    def get_task_config(name)
+      prompt_config = {}
+      agent = Mechanize.new
+      agent.user_agent_alias = 'Mac Safari'
+
+      login_page = agent.get("http://example.com/sessions/new")
+      login_page.form_with(:action => '/sessions') { |f|
+        f.login = 'login'
+        f.password = 'password'
+      }.submit
+
+      task_page = agent.get("http://example.com/projects/#{project_id}/stages/#{id}/deployments/new?task=#{name}")
+
+      deploy_form = task_page.form_with(:action => /deployments/, :method => /post/i)
+
+      deploy_form.fields_with(:name => /prompt_config/).each do |field|
+        field.name.match(/(\w+)\]$/)
+        prompt_config[$1.to_sym] = ask("=> Set #{$1}: ") do |q|
+          q.whitespace = :strip_and_collapse
+          q.validate  = lambda { |p| p.length > 0 }
+          q.responses[:not_valid] = "#{field.name} => can't be blank!"
+        end
+      end
+      prompt_config.presence
     end
+
   end
 end
 

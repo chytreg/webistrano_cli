@@ -1,28 +1,25 @@
 # -*- encoding: utf-8 -*-
-require 'active_resource'
-require 'webistrano_cli/project'
-require 'webistrano_cli/stage'
-require 'webistrano_cli/deployment'
-
 module WebistranoCli
   class Task
+    # include Her::Model
+    # belongs_to :stage
+    # collection_path "projects/:project_id/stages/:stage_id/tasks"
+
     attr_accessor :log
 
-    def initialize project, stage, task
-      puts      "=> Select project: #{project}"
-      @project  = Project.find_by_name(project)
-      puts      "=> Select stage: #{stage}"
-      @stage    = @project.find_stage(stage)
-      @task     = task
-      @log      = ""
+    def initialize project_name, stage_name, task_name
+      puts          "=> Select project: #{project_name}"
+      @project      = Project.all.eq(project_name)
+      puts          "=> Select stage: #{stage_name}"
+      @stage        = @project.stages.eq(stage_name)
+      @task_name    = task_name
+      @log          = ""
     end
 
     def loop_latest_deployment
-      prefix_options = @deployment.prefix_options
       begin
         sleep 5
-        @deployment.prefix_options.merge!(prefix_options)
-        @deployment.reload
+        @deployment = Deployment.find(@deployment.id, {:project_id => @project.id, :stage_id => @stage.id})
         print_diff(@deployment)
       end while @deployment.completed_at.nil?
     end
@@ -39,13 +36,15 @@ module WebistranoCli
     def run
       puts "=> Get prompt config..."
       params = {
-        :task => @task,
-        :project_id => @project.id,
-        :stage_id => @stage.id,
-        :prompt_config => Deployment.get_prompt_config(@project.id, @stage.id, @task)
+        :task           => @task_name,
+        :project_id    => @project.id,
+        :stage_id      => @stage.id,
+        :prompt_config  => @stage.get_task_config(@task_name)
       }
-      puts "=> Task: #{@task}"
-      @deployment = Deployment.create(params)
+
+      puts "=> Task: #{@task_name}"
+      @deployment = Deployment.new(params)
+      @deployment.save
       loop_latest_deployment
       puts "=> Status: #{@deployment.status}"
     end

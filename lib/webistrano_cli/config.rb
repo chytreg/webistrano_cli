@@ -4,50 +4,61 @@ module WebistranoCli
   class Config
 
     def initialize
-      @file_path = File.expand_path('~/.webistrano_cli.yml')
-      if File.exists?(@file_path)
-        @config = YAML.load_file(@file_path) rescue nil
-      else
-        @config = nil
-      end
+      @file_path  = File.expand_path('~/.webistrano_cli.yml')
+      @config     = YAML.load_file(@file_path) rescue nil
     end
 
-    def get
+    def setup_and_load!
       config = {}
-
-      [:site, :user,:password].each do |field|
-        config[field] = ENV["WCLI_#{field.to_s.upcase}"] || (@config['webistrano_cli'][field.to_s] rescue nil)
+      # read config from ENV or ask for it
+      [:url, :user,:password].each do |field|
+        config[field] = ENV["WCLI_#{field.to_s.upcase}"] || (get_value(field) rescue nil)
         next if config[field]
-        config[field] = ask("webistrano #{field}: ") do |q|
+        config[field] = ask("webistrano #{field}: ", String) do |q|
           q.whitespace = :strip_and_collapse
           q.validate  = lambda { |p| p.length > 0 }
           q.responses[:not_valid] = "can't be blank!"
         end
       end
+      @config = config
+      save_yaml
+    end
 
-      File.open(@file_path, 'w') do |f|
-        obj = {
+    def stage opt
+      opt || get_value('defaults/stage') || 'staging'
+    end
+
+    def task opt
+      opt || get_config_value('defaults/task') || 'deploy:migrations'
+    end
+
+    def get_value(path)
+      nested = path.to_s.split('/')
+      current = @config['webistrano_cli']
+      nested.each do |key|
+        current = current[key]
+      end
+      current
+    rescue
+      nil
+    end
+
+    def save_yaml
+      return @config if File.exists?(@file_path)
+      File.open(@file_path, 'w') do |file|
+        YAML.dump({
           'webistrano_cli' => {
-            'site' => config[:site],
-            'user' => config[:user],
-            'password' => config[:password],
+            'url' => @config[:url].to_s,
+            'user' => @config[:user].to_s,
+            'password' => @config[:password].to_s,
             'defaults' => {
               'stage' => 'staging',
               'task'  => 'deploy:migrations'
             }
           }
-        }
-        YAML.dump obj, f
-      end unless File.exists?(@file_path)
-      config
-    end
-
-    def stage opt
-      opt || (@config['webistrano_cli']['defaults']['stage'] rescue nil) || 'staging'
-    end
-
-    def task opt
-      opt || (@config['webistrano_cli']['defaults']['task'] rescue nil) || 'deploy:migrations'
+        }, file)
+      end
+      @config
     end
 
   end
