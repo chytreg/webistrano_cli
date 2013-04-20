@@ -12,16 +12,22 @@ require 'webistrano_cli'
 opts = Slop.new :help => true do
   banner 'Usage: webistrano_cli -p project_name'
   description 'command allow to deploy projects from webistrano'
-  on :p, :project, 'Project name', true
-  on :s, :stage, 'Stage', true
-  on :t, :task, 'Task', true
+  on :p, :project=, 'Project name', :as => String
+  on :s, :stage=,   'Stage',        :as => String
+  on :t, :task=,    'Task',         :as => String
   on :v, :version, 'Print the version' do
     puts "Version #{WebistranoCli::VERSION}"
   end
 end
+
 begin
   opts.parse
-  opts.p? ? WebistranoCli.deploy(opts.to_hash) : (puts(opts.help) unless opts.v?)
+  hash = opts.to_hash
+  unless opts.p?
+    hash[:project] = File.split(Dir.pwd).last
+    puts "No project param, current dir name used."
+  end
+  WebistranoCli.deploy(hash)
 rescue Slop::Error => ex
   puts ex.message
 end

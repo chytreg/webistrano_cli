@@ -29,7 +29,7 @@ module WebistranoCli
     end
 
     def task opt
-      opt || get_config_value('defaults/task') || 'deploy:migrations'
+      opt || get_value('defaults/task') || 'deploy:migrations'
     end
 
     def get_value(path)
