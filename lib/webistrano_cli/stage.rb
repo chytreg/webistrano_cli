@@ -2,6 +2,7 @@
 module WebistranoCli
   class Stage
     include Her::Model
+    uses_api WebistranoCli::API
     belongs_to :project
 
     def tasks

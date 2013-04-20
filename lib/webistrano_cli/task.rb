@@ -1,10 +1,6 @@
 # -*- encoding: utf-8 -*-
 module WebistranoCli
   class Task
-    # include Her::Model
-    # belongs_to :stage
-    # collection_path "projects/:project_id/stages/:stage_id/tasks"
-
     attr_accessor :log
 
     def initialize project_name, stage_name, task_name
@@ -36,10 +32,10 @@ module WebistranoCli
     def run
       puts "=> Get prompt config..."
       params = {
-        :task           => @task_name,
+        :task          => @task_name,
         :project_id    => @project.id,
         :stage_id      => @stage.id,
-        :prompt_config  => @stage.get_task_config(@task_name)
+        :prompt_config => @stage.get_task_config(@task_name)
       }
 
       puts "=> Task: #{@task_name}"

@@ -8,11 +8,16 @@ module WebistranoCli
       @config     = YAML.load_file(@file_path) rescue nil
     end
 
+    def load!(path)
+      @config  = YAML.load_file(path)
+    end
+
     def setup_and_load!
+      return @config if @config.presence
       config = {}
       # read config from ENV or ask for it
-      [:url, :user,:password].each do |field|
-        config[field] = ENV["WCLI_#{field.to_s.upcase}"] || (get_value(field) rescue nil)
+      ['url', 'user', 'password'].each do |field|
+        config[field] = ENV["WCLI_#{field.upcase}"]
         next if config[field]
         config[field] = ask("webistrano #{field}: ", String) do |q|
           q.whitespace = :strip_and_collapse
@@ -20,7 +25,7 @@ module WebistranoCli
           q.responses[:not_valid] = "can't be blank!"
         end
       end
-      @config = config
+      @config = {'webistrano_cli' =>  config}
       save_yaml
     end
 
@@ -48,9 +53,9 @@ module WebistranoCli
       File.open(@file_path, 'w') do |file|
         YAML.dump({
           'webistrano_cli' => {
-            'url' => @config[:url].to_s,
-            'user' => @config[:user].to_s,
-            'password' => @config[:password].to_s,
+            'url' => @config['url'].to_s,
+            'user' => @config['user'].to_s,
+            'password' => @config['password'].to_s,
             'defaults' => {
               'stage' => 'staging',
               'task'  => 'deploy:migrations'

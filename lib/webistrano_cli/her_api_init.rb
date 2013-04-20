@@ -56,15 +56,3 @@ module Her
     end
   end
 end
-# config setup
-config = WebistranoCli::Config.new; WebistranoCli::Config.new.setup_and_load!
-
-Her::API.setup :url => config.get_value('url') do |c|
-  c.headers['Accept']       = 'application/xml'
-  c.headers['Content-Type'] = 'application/xml'
-  c.basic_auth config.get_value('user'), config.get_value('password')
-  c.response :logger if ENV['WCLI_DEBUG']
-  c.use HerXmlParser
-  c.use HerXMLPost
-  c.adapter Faraday.default_adapter
-end
