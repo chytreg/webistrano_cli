@@ -1,12 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-
-# Set up gems listed in the Gemfile.
-ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
-require 'bundler'
-Bundler.setup
 require 'slop'
-require 'webistrano_cli'
+require File.join(File.dirname(__FILE__), '../lib/webistrano_cli')
 
 # parse assumes ARGV, otherwise you can pass it your own Array
 opts = Slop.new :help => true do
@@ -25,7 +20,7 @@ begin
   hash = opts.to_hash
   unless opts.p?
     hash[:project] = File.split(Dir.pwd).last
-    puts "No project param, current dir name used."
+    puts "No project param, used current dir name."
   end
   WebistranoCli.deploy(hash)
 rescue Slop::Error => ex
