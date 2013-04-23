@@ -44,7 +44,7 @@ module WebistranoCli
         :task          => @task_name,
         :project_id    => @project.id,
         :stage_id      => @stage.id,
-        :prompt_config => @stage.prompt_task_config(@task_name)
+        :prompt_config => @stage.prompt_task_config(@task_name).presence
       }
 
       puts "=> Task: #{@task_name}"
