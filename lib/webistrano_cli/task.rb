@@ -58,7 +58,7 @@ module WebistranoCli
       required_keys = @stage.get_required_config(@task_name)
       prompt_config.symbolize_keys!
 
-      if (required_keys - prompt_config).blank?
+      if (required_keys - prompt_config.keys).blank?
 
         params = {
           :task          => @task_name,
