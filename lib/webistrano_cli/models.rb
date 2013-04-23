@@ -1,5 +1,21 @@
 # -*- encoding: utf-8 -*-
+require 'mechanize'
+
 module WebistranoCli
+
+  class Deployment
+    include Her::Model
+    uses_api WebistranoCli::API
+    collection_path "projects/:project_id/stages/:stage_id/deployments"
+    include_root_in_json :deployment
+  end
+
+  class Project
+    include Her::Model
+    uses_api WebistranoCli::API
+    has_many :stages
+  end
+
   class Stage
     include Her::Model
     uses_api WebistranoCli::API
@@ -34,7 +50,6 @@ module WebistranoCli
       end
       prompt_config.presence
     end
-
   end
-end
 
+end

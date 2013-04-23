@@ -9,7 +9,7 @@ module WebistranoCli
     end
 
     def load!(path)
-      @config  = YAML.load_file(path)
+      @config = YAML.load_file(path)
     end
 
     def setup_and_load!
@@ -29,12 +29,11 @@ module WebistranoCli
       save_yaml
     end
 
-    def stage opt
-      opt || get_value('defaults/stage') || 'staging'
-    end
-
-    def task opt
-      opt || get_value('defaults/task') || 'deploy:migrations'
+    def defaults
+      {
+        :stage  => get_value('defaults/stage')  || 'staging',
+        :task   => get_value('defaults/task')   || 'deploy:migrations'
+      }
     end
 
     def get_value(path)

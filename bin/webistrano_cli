@@ -1,25 +1,16 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'slop'
+require 'webistrano_cli'
 
-require File.join(File.dirname(__FILE__), '../lib/webistrano_cli/config')
-require File.join(File.dirname(__FILE__), '../lib/webistrano_cli/her_api_init')
 config = WebistranoCli::Config.new
 config.setup_and_load!
 
-WebistranoCli::API = Her::API.new
-WebistranoCli::API.setup :url => config.get_value('url') do |c|
-  c.headers['Accept']       = 'application/xml'
-  c.headers['Content-Type'] = 'application/xml'
-  c.basic_auth config.get_value('user'), config.get_value('password')
-  c.response :logger if ENV['WCLI_DEBUG']
-  c.use HerXmlParser
-  c.use HerXMLPost
-  c.adapter Faraday.default_adapter
-end
-
-# load api related models
-require File.join(File.dirname(__FILE__), '../lib/webistrano_cli')
+WebistranoCli.configure(
+  config.get_value('url'),
+  config.get_value('user'),
+  config.get_value('password')
+)
 
 # parse assumes ARGV, otherwise you can pass it your own Array
 opts = Slop.new :help => true do
@@ -40,7 +31,8 @@ begin
     hash[:project] = File.split(Dir.pwd).last
     puts "No project param, used current dir name."
   end
-  WebistranoCli.deploy(hash, config)
+  raise hash.inspect
+  WebistranoCli.deploy(hash)
 rescue Slop::Error => ex
   puts ex.message
 end

@@ -1,16 +1,33 @@
 # -*- encoding: utf-8 -*-
 require 'rubygems'
 require 'highline/import'
-require File.join(File.dirname(__FILE__), 'webistrano_cli/version')
-require File.join(File.dirname(__FILE__), 'webistrano_cli/project')
-require File.join(File.dirname(__FILE__), 'webistrano_cli/stage')
-require File.join(File.dirname(__FILE__), 'webistrano_cli/task')
-require File.join(File.dirname(__FILE__), 'webistrano_cli/deployment')
+require 'webistrano_cli/version'
+require 'webistrano_cli/config'
+require 'webistrano_cli/her_middlewares'
 
 module WebistranoCli
   class << self
-    def deploy opts = {}, config
-      Task.new(opts[:project], config.stage(opts[:stage]), config.task(opts[:task])).run
+
+    def configure(url, user, pass, &block)
+      WebistranoCli::API.setup :url => user do |c|
+        c.basic_auth user, pass
+        c.headers = {
+          'Accept'        => 'application/xml'
+          'Content-Type'  => 'application/xml'
+        }
+        c.response :logger if ENV['WCLI_DEBUG']
+        c.use HerXmlParser
+        c.use HerXMLPost
+        c.adapter Faraday.default_adapter
+
+        yield c if block_given?
+      end
+      require 'webistrano_cli/models'
+      require 'webistrano_cli/task'
+    end
+
+    def deploy opts = {}
+      Task.new(*opts.values).run
     end
   end
 end
