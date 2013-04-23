@@ -31,8 +31,9 @@ begin
     hash[:project] = File.split(Dir.pwd).last
     puts "No project param, used current dir name."
   end
-  raise hash.inspect
-  WebistranoCli.deploy(hash)
+  hash = hash.inject({}) {|m, (k, v)| m[k] = v if v.present?; m}
+  hash.reverse_merge!(config.defaults)
+  WebistranoCli.deploy(hash.slice(:project, :stage, :task))
 rescue Slop::Error => ex
   puts ex.message
 end

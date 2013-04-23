@@ -6,15 +6,17 @@ require 'webistrano_cli/config'
 require 'webistrano_cli/her_middlewares'
 
 module WebistranoCli
+  API = Her::API.new
+
   class << self
+    attr_accessor :url, :user, :pass
 
     def configure(url, user, pass, &block)
-      WebistranoCli::API.setup :url => user do |c|
+      @url = url; @user = user; @pass = pass
+      WebistranoCli::API.setup :url => url do |c|
+        c.headers['Accept']       = 'application/xml'
+        c.headers['Content-Type'] = 'application/xml'
         c.basic_auth user, pass
-        c.headers = {
-          'Accept'        => 'application/xml'
-          'Content-Type'  => 'application/xml'
-        }
         c.response :logger if ENV['WCLI_DEBUG']
         c.use HerXmlParser
         c.use HerXMLPost
@@ -30,4 +32,5 @@ module WebistranoCli
       Task.new(*opts.values).run
     end
   end
+
 end
