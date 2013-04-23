@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-require 'rubygems'
 require 'highline/import'
 require 'webistrano_cli/version'
 require 'webistrano_cli/config'
