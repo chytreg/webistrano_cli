@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency 'rake',  '~> 0.9.2'
-  s.add_dependency 'her',               '~> 0.5.5'
+  s.add_dependency 'her',               '~> 0.6.2'
   s.add_dependency 'faraday_middleware','~> 0.9.0'
   s.add_dependency 'multi_xml',         '~> 0.5.3'
   s.add_dependency 'mechanize',         '~> 2.6.0'
