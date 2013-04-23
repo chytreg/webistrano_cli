@@ -32,7 +32,7 @@ begin
   end
   hash = hash.inject({}) {|m, (k, v)| m[k] = v if v.present?; m}
   hash.reverse_merge!(config.defaults)
-  WebistranoCli.deploy(hash.slice(:project, :stage, :task))
+  WebistranoCli.deploy(hash)
 rescue Slop::Error => ex
   puts ex.message
 end

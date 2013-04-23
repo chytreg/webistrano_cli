@@ -28,7 +28,7 @@ module WebistranoCli
     end
 
     def deploy opts = {}
-      Task.new(*opts.values).run
+      Task.new(opts[:project], opts[:stage], opts[:task]).run
     end
   end
 
