@@ -13,6 +13,7 @@ module WebistranoCli
     end
 
     def trigger_deployment(params)
+      params.delete(:prompt_config) if params[:prompt_config].blank?
       @deployment = Deployment.new(params)
       @deployment.save
     end
@@ -44,7 +45,7 @@ module WebistranoCli
         :task          => @task_name,
         :project_id    => @project.id,
         :stage_id      => @stage.id,
-        :prompt_config => @stage.prompt_task_config(@task_name).presence
+        :prompt_config => @stage.prompt_task_config(@task_name)
       }
 
       puts "=> Task: #{@task_name}"
