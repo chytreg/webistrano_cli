@@ -4,9 +4,9 @@ module WebistranoCli
     attr_accessor :log
 
     def initialize project_name, stage_name, task_name
-      puts          "=> Select project: #{project_name}"
+      WebistranoCli.logger.info "=> Select project: #{project_name}"
       @project      = Project.all.eq(project_name)
-      puts          "=> Select stage: #{stage_name}"
+      WebistranoCli.logger.info "=> Select stage: #{stage_name}"
       @stage        = @project.stages.eq(stage_name)
       @task_name    = task_name
       @log          = ""
@@ -40,7 +40,7 @@ module WebistranoCli
     end
 
     def run
-      puts "=> Get prompt config..."
+      WebistranoCli.logger.info "=> Get prompt config..."
       params = {
         :task          => @task_name,
         :project_id    => @project.id,
@@ -48,14 +48,14 @@ module WebistranoCli
         :prompt_config => @stage.prompt_task_config(@task_name)
       }
 
-      puts "=> Task: #{@task_name}"
+      WebistranoCli.logger.info "=> Task: #{@task_name}"
       trigger_deployment(params)
       loop_latest_deployment
-      puts "=> Status: #{@deployment.status}"
+      WebistranoCli.logger.info "=> Status: #{@deployment.status}"
     end
 
     def quiet_run(prompt_config = {})
-      puts "=> Checking prompt config..."
+      WebistranoCli.logger.info "=> Checking prompt config..."
       required_keys = @stage.get_required_config(@task_name)
       prompt_config.symbolize_keys!
 
@@ -68,12 +68,12 @@ module WebistranoCli
           :prompt_config => prompt_config
         }
 
-        puts "=> Task: #{@task_name}"
+        WebistranoCli.logger.info "=> Task: #{@task_name}"
         trigger_deployment(params)
-        puts "=> Deploy started"
+        WebistranoCli.logger.info "=> Deploy started"
       else
-        puts "=> Requied promt config to deploy: #{required_keys.join(', ')}"
-        puts "=> Deploy failed "
+        WebistranoCli.logger.info "=> Requied promt config to deploy: #{required_keys.join(', ')}"
+        WebistranoCli.logger.info "=> Deploy failed "
       end
     end
 

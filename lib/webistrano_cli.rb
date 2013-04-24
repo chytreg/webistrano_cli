@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require 'logger'
 require 'highline/import'
 require 'webistrano_cli/version'
 require 'webistrano_cli/config'
@@ -8,10 +9,11 @@ module WebistranoCli
   API = Her::API.new
 
   class << self
-    attr_accessor :url, :user, :pass
+    attr_accessor :url, :user, :pass, :logger
 
     def configure(url, user, pass, &block)
       @url = url; @user = user; @pass = pass
+      @logger = ::Logger.new(STDOUT)
       WebistranoCli::API.setup :url => url do |c|
         c.headers['Accept']       = 'application/xml'
         c.headers['Content-Type'] = 'application/xml'
@@ -25,6 +27,10 @@ module WebistranoCli
       end
       require 'webistrano_cli/models'
       require 'webistrano_cli/task'
+    end
+
+    def logger=(value)
+      @logger = value if value.is_a?(Logger)
     end
 
     def deploy opts = {}
