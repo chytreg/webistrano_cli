@@ -3,11 +3,11 @@ require 'her'
 require 'faraday_middleware'
 require 'multi_xml'
 
-# hack multi_xml parser
-MultiXml.send(:remove_const, 'DISALLOWED_XML_TYPES')
-MultiXml.const_set('DISALLOWED_XML_TYPES', [])
-
 class HerXmlParser < Faraday::Response::ParseXml
+  define_parser do |body|
+    ::MultiXml.parse(body, {disallowed_types: => []})
+  end
+
   def process_response(env)
     case env[:status]
     when 200
