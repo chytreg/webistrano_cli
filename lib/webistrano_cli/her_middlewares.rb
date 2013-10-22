@@ -5,7 +5,7 @@ require 'multi_xml'
 
 class HerXmlParser < Faraday::Response::ParseXml
   define_parser do |body|
-    ::MultiXml.parse(body, {disallowed_types: => []})
+    ::MultiXml.parse(body, {:disallowed_types => []})
   end
 
   def process_response(env)
