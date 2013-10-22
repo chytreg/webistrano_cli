@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/chytreg/webistrano_cli"
   s.summary     = %q{Allow to deploy projects from webistrano via console}
   s.description = %q{Allow to deploy projects from webistrano via console}
+  s.license  = 'MIT'
 
   s.rubyforge_project = "webistrano_cli"
 
